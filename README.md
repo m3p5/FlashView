@@ -18,18 +18,7 @@ A lightweight, cross-platform desktop application to view the MJPEG camera strea
 
 ## Screenshots
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│  IP: [192.168.1.100] [:8080] [/?action=stream]                  │
-│  [Connect]  [Disconnect]  [Snapshot]  [Light]       5.3 fps     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│                  (live video frame here)                        │
-│                                                                 │
-├─────────────────────────────────────────────────────────────────┤
-│  Connected to http://192.168.1.100:8080/?action=stream          │
-└─────────────────────────────────────────────────────────────────┘
-```
+![FlashView on macOS](./References/FlashView_on_macOS.png)
 
 ---
 
