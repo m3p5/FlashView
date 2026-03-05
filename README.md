@@ -158,4 +158,4 @@ Filename format: `snapshot_YYYYMMDD_HHMMSS.png`
 
 ## License
 
-MIT License – free to use and modify.
+Released under the MIT License. See LICENSE file for details.
