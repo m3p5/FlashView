@@ -1,5 +1,9 @@
 # ChangeLog
 
+Version 1.0.2
+
+- Fixed "No image handler for type 15 defined" warning on macOS when taking a snapshot by initializing wxWidgets image handlers at startup.
+
 Version 1.0.1
 
 - Removed legacy migration code for old ip/port/path config format.

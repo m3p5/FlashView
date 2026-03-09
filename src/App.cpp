@@ -5,6 +5,7 @@ wxIMPLEMENT_APP(App);
 
 bool App::OnInit() {
     if (!wxApp::OnInit()) return false;
+    wxInitAllImageHandlers();
     SetAppName("FlashView");
     SetAppDisplayName("FlashView");
 
