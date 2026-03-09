@@ -135,8 +135,8 @@ http://<printer-ip>:8080/?action=stream
 
 Snapshots are saved to:
 
-| Platform | Path                                          |
-|----------|-----------------------------------------------|
+| Platform | Path                                       |
+|----------|--------------------------------------------|
 | Linux    | `~/.FlashView/`                            |
 | macOS    | `~/Library/Application Support/FlashView/` |
 | Windows  | `%APPDATA%\FlashView\`                     |
