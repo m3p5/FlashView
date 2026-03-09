@@ -3,12 +3,15 @@
 #include "App.h"
 #include <iostream>
 
+#include <wx/aboutdlg.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/datetime.h>
 #include <wx/graphics.h>
 #include <wx/dcbuffer.h>
 #include <wx/config.h>
+
+static const wxString APP_VERSION = "1.1.0";
 
 extern "C" {
 #include <libavformat/avformat.h>
@@ -121,7 +124,9 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_BUTTON(ID_SNAPSHOT,   MainFrame::OnSnapshot)
     EVT_BUTTON(ID_LIGHT,      MainFrame::OnLight)
     EVT_TIMER(ID_FRAME_TIMER, MainFrame::OnFrameTimer)
-    EVT_CLOSE(MainFrame::OnClose)
+    EVT_CLOSE(              MainFrame::OnClose)
+    EVT_MENU(wxID_EXIT,     MainFrame::OnExit)
+    EVT_MENU(wxID_ABOUT,    MainFrame::OnAbout)
 wxEND_EVENT_TABLE()
 
 // ─────────────────────────────────────────────
@@ -132,6 +137,7 @@ MainFrame::MainFrame()
               wxDefaultPosition, wxSize(900, 620)),
       m_frameTimer(this, ID_FRAME_TIMER)
 {
+    BuildMenuBar();
     BuildUI();
 
     // Minimum size: wide enough for the full toolbar without clipping,
@@ -464,6 +470,47 @@ void MainFrame::OnFrameTimer(wxTimerEvent&) {
     }
 }
 
+// ─────────────────────────────────────────────
+//  Menu bar
+// ─────────────────────────────────────────────
+void MainFrame::BuildMenuBar()
+{
+    wxMenuBar* bar = new wxMenuBar;
+
+#ifndef __WXMAC__
+    wxMenu* fileMenu = new wxMenu;
+    fileMenu->Append(wxID_EXIT, "E&xit\tCtrl+Q");
+    bar->Append(fileMenu, "&File");
+#endif
+
+    wxMenu* helpMenu = new wxMenu;
+    helpMenu->Append(wxID_ABOUT, "&About...");
+    bar->Append(helpMenu, "&Help");
+
+    SetMenuBar(bar);
+}
+
+void MainFrame::OnExit(wxCommandEvent&) { Close(true); }
+
+void MainFrame::OnAbout(wxCommandEvent&)
+{
+    wxAboutDialogInfo info;
+    info.SetName("FlashView");
+    info.SetVersion(APP_VERSION);
+    info.SetDescription(
+        "Camera viewer for Flashforge 3D printers.\n\n"
+        "Enter the printer's IP address and stream\n"
+        "URL and click Connect.\n"
+        "Snapshots are saved to:\n"
+        "        ~/Documents/FlashPrint/");
+    info.SetCopyright("(C) 2025-2026");
+    info.AddDeveloper("m3p5 - C++ with wxWidgets & FFmpeg");
+    wxAboutBox(info, this);
+}
+
+// ─────────────────────────────────────────────
+//  Close
+// ─────────────────────────────────────────────
 void MainFrame::OnClose(wxCloseEvent& evt) {
     StopStream();
     SaveSettings();

@@ -1,5 +1,9 @@
 # ChangeLog
 
+Version 1.1.0
+
+- Added application menubar with "About..." and "Quit" options.
+
 Version 1.0.3
 
 - Fixed snapshot save path on Linux: when XDG_DOCUMENTS_DIR is unset, wxStandardPaths::GetDocumentsDir() returns $HOME rather than ~/Documents. Snapshots now correctly save to ~/Documents/FlashPrint/ if ~/Documents exists.

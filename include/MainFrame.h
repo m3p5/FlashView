@@ -45,6 +45,7 @@ public:
 private:
     // UI helpers
     void BuildUI();
+    void BuildMenuBar();
     void LoadSettings();
     void SaveSettings();
     void UpdateStatus(const wxString& msg, bool error = false);
@@ -57,6 +58,8 @@ private:
     void OnLight(wxCommandEvent& evt);
     void OnFrameTimer(wxTimerEvent& evt);
     void OnClose(wxCloseEvent& evt);
+    void OnAbout(wxCommandEvent& evt);
+    void OnExit(wxCommandEvent& evt);
 
     // RTSP thread
     void StreamThread();
