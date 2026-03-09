@@ -236,17 +236,6 @@ void MainFrame::LoadSettings() {
     wxString url;
     if (cfg.Read("url", &url)) {
         m_urlCtrl->SetValue(url);
-    } else {
-        // Migrate from old ip+port+path format
-        wxString ip = cfg.Read("ip", "192.168.1.100");
-        // Strip full URL that old builds stored in the ip field
-        if (ip.StartsWith("rtsp://") || ip.StartsWith("http://")) {
-            m_urlCtrl->SetValue(ip);
-        } else {
-            long port = cfg.ReadLong("port", 8080);
-            wxString path = cfg.Read("path", "/?action=stream");
-            m_urlCtrl->SetValue(wxString::Format("http://%s:%ld%s", ip, port, path));
-        }
     }
 }
 
@@ -321,7 +310,8 @@ void MainFrame::OnSnapshot(wxCommandEvent&) {
         snapshot = m_pendingFrame;
     }
 
-    wxString dir = wxStandardPaths::Get().GetUserDataDir();
+    wxString dir = wxStandardPaths::Get().GetDocumentsDir()
+                   + wxFileName::GetPathSeparator() + "FlashPrint";
     wxFileName::Mkdir(dir, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 
     wxDateTime now = wxDateTime::Now();

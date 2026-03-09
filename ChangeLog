@@ -1,5 +1,10 @@
 # ChangeLog
 
+Version 1.0.1
+
+- Removed legacy migration code for old ip/port/path config format.
+- Changed default snapshot folder to ~/Documents/FlashPrint/ (Documents\FlashPrint\ on Windows).
+
 Version 1.0.0
 
 - Initial Release.

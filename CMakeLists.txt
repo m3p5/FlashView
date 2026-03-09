@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Flash4Viewer VERSION 1.0.0 LANGUAGES CXX)
+project(Flash4Viewer VERSION 1.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -50,7 +50,11 @@ if(WIN32)
 elseif(APPLE)
     set(MACOSX_BUNDLE_BUNDLE_NAME "FlashView")
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
-    add_executable(FlashView MACOSX_BUNDLE ${SOURCES} ${HEADERS})
+    set(MACOSX_BUNDLE_ICON_FILE FlashView.png)
+    set(APP_ICON resources/FlashView.png)
+    set_source_files_properties(${APP_ICON} PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources)
+    add_executable(FlashView MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${APP_ICON})
 else()
     add_executable(FlashView ${SOURCES} ${HEADERS})
 endif()
@@ -75,3 +79,8 @@ endif()
 install(TARGETS FlashView
         BUNDLE  DESTINATION .
         RUNTIME DESTINATION bin)
+
+if(UNIX AND NOT APPLE)
+    install(FILES resources/FlashView.png
+            DESTINATION share/pixmaps)
+endif()
