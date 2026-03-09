@@ -1,5 +1,9 @@
 # ChangeLog
 
+Version 1.0.3
+
+- Fixed snapshot save path on Linux: when XDG_DOCUMENTS_DIR is unset, wxStandardPaths::GetDocumentsDir() returns $HOME rather than ~/Documents. Snapshots now correctly save to ~/Documents/FlashPrint/ if ~/Documents exists.
+
 Version 1.0.2
 
 - Fixed "No image handler for type 15 defined" warning on macOS when taking a snapshot by initializing wxWidgets image handlers at startup.

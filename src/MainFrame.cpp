@@ -310,8 +310,15 @@ void MainFrame::OnSnapshot(wxCommandEvent&) {
         snapshot = m_pendingFrame;
     }
 
-    wxString dir = wxStandardPaths::Get().GetDocumentsDir()
-                   + wxFileName::GetPathSeparator() + "FlashPrint";
+    wxString docsDir = wxStandardPaths::Get().GetDocumentsDir();
+#ifdef __LINUX__
+    // On Linux, GetDocumentsDir() returns $HOME when XDG_DOCUMENTS_DIR is unset.
+    // Prefer ~/Documents if it exists.
+    wxString linuxDocs = wxGetHomeDir() + "/Documents";
+    if (wxDirExists(linuxDocs))
+        docsDir = linuxDocs;
+#endif
+    wxString dir = docsDir + wxFileName::GetPathSeparator() + "FlashPrint";
     wxFileName::Mkdir(dir, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 
     wxDateTime now = wxDateTime::Now();
