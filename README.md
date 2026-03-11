@@ -135,11 +135,11 @@ http://<printer-ip>:8080/?action=stream
 
 Snapshots are saved to:
 
-| Platform | Path                                       |
-|----------|--------------------------------------------|
-| Linux    | `~/.FlashView/`                            |
-| macOS    | `~/Library/Application Support/FlashView/` |
-| Windows  | `%APPDATA%\FlashView\`                     |
+| Platform | Path                               |
+|----------|------------------------------------|
+| Linux    | `~/Documents/FlashPrint/`          |
+| macOS    | `~/Documents/FlashPrint/`          |
+| Windows  | `%HOMEPATH%\Documents\FlashPrint\` |
 
 Filename format: `snapshot_YYYYMMDD_HHMMSS.png`
 
