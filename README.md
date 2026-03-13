@@ -100,7 +100,7 @@ open build/FlashView.app
 
    ```powershell
    cmake -B build `
-     -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
+     -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake `
      -DVCPKG_TARGET_TRIPLET=x64-windows `
      -DCMAKE_BUILD_TYPE=Release
    cmake --build build --config Release

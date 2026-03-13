@@ -10,28 +10,35 @@ find_package(wxWidgets REQUIRED COMPONENTS core base)
 include(${wxWidgets_USE_FILE})
 
 # ── FFmpeg (libav*) ──────────────────────────────────────────────────────────
-# Use pkg-config on Linux/macOS; on Windows point CMAKE_PREFIX_PATH at your
-# FFmpeg install or set FFMPEG_ROOT.
-find_package(PkgConfig QUIET)
-if(PkgConfig_FOUND)
+# On Windows, pkg-config returns bare library names without full paths, which
+# breaks the MSVC linker. Use find_path/find_library instead so CMake always
+# resolves absolute paths (works with vcpkg via CMAKE_PREFIX_PATH).
+# On Linux/macOS, pkg-config is reliable and preferred.
+if(WIN32)
+    find_path(FFMPEG_INCLUDE_DIR libavformat/avformat.h)
+    find_library(AVFORMAT_LIB avformat)
+    find_library(AVCODEC_LIB  avcodec)
+    find_library(AVUTIL_LIB   avutil)
+    find_library(SWSCALE_LIB  swscale)
+
+    foreach(_lib FFMPEG_INCLUDE_DIR AVFORMAT_LIB AVCODEC_LIB AVUTIL_LIB SWSCALE_LIB)
+        if(NOT ${_lib})
+            message(FATAL_ERROR "FFmpeg component not found: ${_lib}. "
+                "Ensure ffmpeg:x64-windows is installed in vcpkg and "
+                "-DCMAKE_TOOLCHAIN_FILE points to vcpkg.cmake.")
+        endif()
+    endforeach()
+
+    set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIR})
+    set(FFMPEG_LIBRARIES ${AVFORMAT_LIB} ${AVCODEC_LIB} ${AVUTIL_LIB} ${SWSCALE_LIB})
+else()
+    # Linux / macOS: pkg-config gives correct full paths
+    find_package(PkgConfig REQUIRED)
     pkg_check_modules(FFMPEG REQUIRED
         libavformat
         libavcodec
         libavutil
         libswscale)
-else()
-    # Fallback: manual search (useful on Windows with vcpkg / prebuilt FFmpeg)
-    set(FFMPEG_ROOT "" CACHE PATH "Root of FFmpeg installation")
-    find_path(FFMPEG_INCLUDE_DIR libavformat/avformat.h
-              HINTS "${FFMPEG_ROOT}/include")
-    find_library(AVFORMAT_LIB avformat HINTS "${FFMPEG_ROOT}/lib")
-    find_library(AVCODEC_LIB  avcodec  HINTS "${FFMPEG_ROOT}/lib")
-    find_library(AVUTIL_LIB   avutil   HINTS "${FFMPEG_ROOT}/lib")
-    find_library(SWSCALE_LIB  swscale  HINTS "${FFMPEG_ROOT}/lib")
-
-    set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIR})
-    set(FFMPEG_LIBRARIES
-        ${AVFORMAT_LIB} ${AVCODEC_LIB} ${AVUTIL_LIB} ${SWSCALE_LIB})
 endif()
 
 # ── Source files ─────────────────────────────────────────────────────────────
@@ -67,7 +74,7 @@ target_link_libraries(FlashView PRIVATE
     ${wxWidgets_LIBRARIES}
     ${FFMPEG_LIBRARIES})
 
-if(PkgConfig_FOUND AND FFMPEG_FOUND)
+if(NOT WIN32 AND FFMPEG_CFLAGS_OTHER)
     target_compile_options(FlashView PRIVATE ${FFMPEG_CFLAGS_OTHER})
 endif()
 
