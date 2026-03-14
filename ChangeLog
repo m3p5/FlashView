@@ -1,5 +1,9 @@
 # ChangeLog
 
+Version 1.1.1
+
+- No code changes, just updates to README and CMakeLists.txt to fix issues with building for Microsoft Windows.
+
 Version 1.1.0
 
 - Added application menubar with "About..." and "Quit" options.

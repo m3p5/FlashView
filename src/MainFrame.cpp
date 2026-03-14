@@ -11,7 +11,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/config.h>
 
-static const wxString APP_VERSION = "1.1.0";
+static const wxString APP_VERSION = "1.1.1";
 
 extern "C" {
 #include <libavformat/avformat.h>
