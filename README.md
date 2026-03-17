@@ -1,6 +1,6 @@
 # Flashforge Adventurer 3/4/5 3D Printer Camera Viewer
 
-A lightweight, cross-platform desktop application to view the MJPEG camera stream on a **Flashforge Adventurer 3/4/5** (and other compatible 3D printers) using **wxWidgets** and **FFmpeg**.
+A lightweight, cross-platform desktop application to view the MJPEG camera stream on a **Flashforge Adventurer 3/4/5** (and other compatible 3D printers) developed in C++ using **wxWidgets** and **FFmpeg**.
 
 ---
 
