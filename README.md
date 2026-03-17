@@ -22,6 +22,29 @@ A lightweight, cross-platform desktop application to view the MJPEG camera strea
 
 ---
 
+## Project Structure
+
+```text
+FlashView/
+├── ChangeLog               # Version history
+├── CMakeLists.txt          # Top-level build script
+├── include/
+│   ├── App.h               # App header file
+│   └── MainFrame.h         # MainFrame header file
+├── LICENSE                 # Software license description
+├── README.md               # This file
+├── References/
+│   └── FlashView_on_macOS.png  # Screenshot of this app on macOS
+├── resources/
+│   ├── FlashView.icns      # Application icons
+│   └── FlashView.png       # Application icon
+└── src/
+    ├── App.cpp             # wxApp entry point
+    └── MainFrame.cpp       # Main application window
+```
+
+---
+
 ## Dependencies
 
 | Library       | Version | Purpose                        |
