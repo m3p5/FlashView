@@ -1,5 +1,9 @@
 # ChangeLog
 
+Version 1.1.2
+
+- Fixed FFmpeg header and library detection during CMake builds on macOS/Homebrew, enabling successful compilation of the application.
+
 Version 1.1.1
 
 - No code changes, just updates to README and CMakeLists.txt to fix issues with building for Microsoft Windows.

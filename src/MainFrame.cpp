@@ -11,16 +11,40 @@
 #include <wx/dcbuffer.h>
 #include <wx/config.h>
 
-static const wxString APP_VERSION = "1.1.1";
+#include <chrono>
 
+static const wxString APP_VERSION = "1.1.2";
+
+// Detect presence of FFmpeg headers; if not available provide minimal stubs.
+// CMake can also define HAVE_FFMPEG=1/0 explicitly for the target.
+#if !defined(HAVE_FFMPEG)
+#  if defined(__has_include)
+#    if __has_include(<libavformat/avformat.h>) && __has_include(<libavcodec/avcodec.h>) \
+        && __has_include(<libavutil/imgutils.h>) && __has_include(<libswscale/swscale.h>)
+#      define HAVE_FFMPEG 1
+#    else
+#      define HAVE_FFMPEG 0
+#    endif
+#  else
+#    define HAVE_FFMPEG 0
+#  endif
+#endif
+
+#if HAVE_FFMPEG
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
 #include <libavutil/imgutils.h>
 #include <libswscale/swscale.h>
 }
-
-#include <chrono>
+#else
+// Minimal stubs so the file can compile without FFmpeg headers.
+// These are intentionally lightweight; full functionality requires FFmpeg.
+typedef struct AVFormatContext AVFormatContext;
+typedef struct AVCodecContext AVCodecContext;
+typedef struct SwsContext SwsContext;
+static inline int av_image_get_buffer_size(int a, int b, int c, int d) { (void)a; (void)b; (void)c; (void)d; return 0; }
+#endif
 
 #ifdef _WIN32
 #  include <winsock2.h>

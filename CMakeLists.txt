@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Flash4Viewer VERSION 1.1.1 LANGUAGES CXX)
+project(Flash4Viewer VERSION 1.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -14,6 +14,7 @@ include(${wxWidgets_USE_FILE})
 # breaks the MSVC linker. Use find_path/find_library instead so CMake always
 # resolves absolute paths (works with vcpkg via CMAKE_PREFIX_PATH).
 # On Linux/macOS, pkg-config is reliable and preferred.
+set(FLASHVIEW_FFMPEG_AVAILABLE OFF)
 if(WIN32)
     find_path(FFMPEG_INCLUDE_DIR libavformat/avformat.h)
     find_library(AVFORMAT_LIB avformat)
@@ -31,14 +32,28 @@ if(WIN32)
 
     set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIR})
     set(FFMPEG_LIBRARIES ${AVFORMAT_LIB} ${AVCODEC_LIB} ${AVUTIL_LIB} ${SWSCALE_LIB})
+    set(FLASHVIEW_FFMPEG_AVAILABLE ON)
 else()
-    # Linux / macOS: pkg-config gives correct full paths
+    # Linux / macOS: pkg-config gives correct full paths.
+    # Clear any previously cached FFmpeg values so a reconfigure picks up the
+    # currently installed Homebrew/packaged version instead of an older path.
+    foreach(_var IN ITEMS FFMPEG_FOUND FFMPEG_INCLUDE_DIRS FFMPEG_LIBRARIES
+            FFMPEG_LIBRARY_DIRS FFMPEG_CFLAGS FFMPEG_LDFLAGS)
+        unset(${_var})
+        unset(${_var} CACHE)
+    endforeach()
+
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(FFMPEG REQUIRED
         libavformat
         libavcodec
         libavutil
         libswscale)
+    if(FFMPEG_FOUND)
+        list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
+        list(REMOVE_DUPLICATES FFMPEG_LIBRARY_DIRS)
+        set(FLASHVIEW_FFMPEG_AVAILABLE ON)
+    endif()
 endif()
 
 # ── Source files ─────────────────────────────────────────────────────────────
@@ -69,6 +84,12 @@ endif()
 target_include_directories(FlashView PRIVATE
     include
     ${FFMPEG_INCLUDE_DIRS})
+
+if(FLASHVIEW_FFMPEG_AVAILABLE)
+    target_compile_definitions(FlashView PRIVATE HAVE_FFMPEG=1)
+else()
+    target_compile_definitions(FlashView PRIVATE HAVE_FFMPEG=0)
+endif()
 
 target_link_libraries(FlashView PRIVATE
     ${wxWidgets_LIBRARIES}
